@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+<meta charset="utf-8">
+<meta content="stuff, to, help, search, engines, not" name="keywords">
+<meta content="What this page is about." name="description">
+<meta content="Display Webcam Stream" name="title">
+<title>Display Webcam Stream</title>
+  <script src="upload.js"></script>
+
+<style>
+/*#container {
+    margin: 0px auto;
+    width: 500px;
+    height: 375px;
+    border: 10px #333 solid;
+}*/
+#videoElement {
+    width: 500px;
+    height: 375px;
+    background-color: #666;
+}
+</style>
+</head>
+  
+<body>
+ <form method="post" enctype="multipart/form-data">
+        <input type="file" name="files[]" multiple>
+   <!--       <input type="submit" value="Upload File" name="submit"> -->
+   <button id="snap" class="sexyButton" value="Upload File" name="submit">Snap Photo</button> 
+    </form>
+
+<div class="demo-wrapper">
+
+<h1>Hand Gestcha</h1>
+
+<div class="demo-conversion">Read <a href="https://davidwalsh.name/browser-camera" target="_top">HAnd Gestcha</a></div>
+
+<div id="promoNode"></div>
+
+  <p>Hand Gestcha
+  -->
+  <video id="video" width="640" height="480" autoplay></video>
+  <!-- <button id="snap" class="sexyButton" value="Upload File" name="submit">Snap Photo</button> -->
+  <canvas id="canvas" width="640" height="480"></canvas<div id="container">
+ <!--    <video autoplay="true" id="videoElement"> -->
+     
+    <!-- </video> -->
+</div>
+<script>
+  const vid = document.querySelector('video');
+navigator.mediaDevices.getUserMedia({video: true}) // request cam
+.then(stream => {
+  vid.srcObject = stream; // don't use createObjectURL(MediaStream)
+  return vid.play(); // returns a Promise
+})
+.then(()=>{ // enable the button
+  const btn = document.querySelector('button');
+  btn.disabled = false;
+  btn.onclick = e => {
+    takeASnap()
+    .then(download);
+  };
+})
+.catch(e=>console.log('please use the fiddle instead'));
+
+function takeASnap(){
+  const canvas = document.createElement('canvas'); // create a canvas
+  const ctx = canvas.getContext('2d'); // get its context
+  canvas.width = vid.videoWidth; // set its size to the one of the video
+  canvas.height = vid.videoHeight;
+  ctx.drawImage(vid, 0,0); // the video
+  return new Promise((res, rej)=>{
+    canvas.toBlob(res, 'image/jpeg'); // request a Blob from the canvas
+  });
+}
+function download(blob){
+  // uses the <a download> to download a Blob
+  let a = document.createElement('a'); 
+  a.href = URL.createObjectURL(blob);
+  a.download = 'screenshot.jpg';
+  document.body.appendChild(a);
+  a.click();
+}
+//  var video = document.querySelector("#videoElement");
+ 
+// if (navigator.mediaDevices.getUserMedia) {       
+//     navigator.mediaDevices.getUserMedia({video: true})
+//   .then(function(stream) {
+//     video.srcObject = stream;
+//   })
+//   .catch(function(err0r) {
+//     console.log("Something went wrong!");
+//   });
+// }
+
+// if (navigator.mediaDevices.getUserMedia) {       
+//     navigator.mediaDevices.getUserMedia({video: true})
+//   .then(function(stream) {
+//     video.srcObject = stream;
+//   })
+//   .catch(function(error) {
+//     console.log("Something went wrong!");
+//   });
+// }
+// // if (navigator.mediaDevices.getUserMedia) {       
+// //     navigator.mediaDevices.getUserMedia({video: true})
+// //   .then(function(stream) {
+// //     video.srcObject = stream;
+// //   })
+// //   .catch(function(error) {
+// //     console.log("Something went wrong!");
+// //   });
+// // }
+
+
+
+//    // Put event listeners into place
+//    window.addEventListener("DOMContentLoaded", function() {
+//      // Grab elements, create settings, etc.
+//             var canvas = document.getElementById('canvas');
+//             var context = canvas.getContext('2d');
+//             var video = document.getElementById('video');
+//             var mediaConfig =  { video: true };
+//             var errBack = function(e) {
+//              console.log('An error has occurred!', e)
+//             };
+
+//      // Put video listeners into place
+//             if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+//                 navigator.mediaDevices.getUserMedia(mediaConfig).then(function(stream) {
+//          //video.src = window.URL.createObjectURL(stream);
+//          video.srcObject = stream;
+//                     video.play();
+//                 });
+//             }
+
+//             /* Legacy code below! */
+//             else if(navigator.getUserMedia) { // Standard
+//        navigator.getUserMedia(mediaConfig, function(stream) {
+//          video.src = stream;
+//          video.play();
+//        }, errBack);
+//      } else if(navigator.webkitGetUserMedia) { // WebKit-prefixed
+//        navigator.webkitGetUserMedia(mediaConfig, function(stream){
+//          video.src = window.webkitURL.createObjectURL(stream);
+//          video.play();
+//        }, errBack);
+//      } else if(navigator.mozGetUserMedia) { // Mozilla-prefixed
+//        navigator.mozGetUserMedia(mediaConfig, function(stream){
+//          video.src = window.URL.createObjectURL(stream);
+//          video.play();
+//        }, errBack);
+//      }
+
+//      // Trigger photo take
+//      document.getElementById('snap').addEventListener('click', function() {
+//        context.drawImage(video, 0, 0, 640, 480);
+//      });
+//    }, false);
+
+// function download(blob){
+//   // uses the <a download> to download a Blob
+//   let a = document.createElement('a'); 
+//   a.href = URL.createObjectURL(blob);
+//   a.download = 'screenshot.jpg';
+//   document.body.appendChild(a);
+//   a.click();
+// }
+
+
+</script>
+</body>
+</html> 
